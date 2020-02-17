@@ -24,4 +24,5 @@ See the [vue-router history mode docs](https://router.vuejs.org/guide/essentials
 
 ## Connecting to daemon
 ```bash
-./nervad --rpc-bind-ip 0.0.0.0 --confirm-external-bind --rpc-access-control-origins <CORS addresses, your web server URL> --rpc-auth-basic --trusted-daemon --log-level 3```
+./nervad --rpc-bind-ip 0.0.0.0 --confirm-external-bind --rpc-access-control-origins <CORS addresses, your web server URL> --rpc-auth-basic --trusted-daemon --log-level 3
+```
