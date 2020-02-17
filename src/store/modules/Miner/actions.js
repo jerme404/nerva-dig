@@ -48,7 +48,6 @@ const actions = {
 
         if (daemons.length == 0) {
 
-            console.log('no daemons');
             return;
         }
 
@@ -58,12 +57,10 @@ const actions = {
                 daemonAddress = `${daemon.ipAddress}:${daemon.port}`;
             state.minerService.getInfo(daemonAddress).then((response) => {
 
-                console.log(response);
                 daemonStatus.info = response;
                 return state.minerService.getMiningStatus(daemonAddress);
             }).then((response) => {
 
-                console.log(response);
                 daemonStatus.miningStatus = response;
                 commit('minerSetStatus', {
                     id: daemon.id,
