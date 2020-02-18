@@ -12,11 +12,66 @@
                 <router-view></router-view>
             </v-container>
         </v-content>
+        <v-footer
+            fixed
+            flat
+            height="auto"
+            color="primary lighten-1 elevation-1"
+            v-if="daemons.length > 0">
+            <v-layout column>
+                <v-divider dark/>
+                <v-layout
+                    row
+                    wrap
+                    align-center
+                    class="px-3 no-select secondary--text primary lighten-1"
+                    v-bind:class="{ 'py-3': !isMobile, 'py-2': isMobile }"
+                    v-if="daemons.length > 0">
+                    <v-flex xs6 md3 v-if="!isMobile">
+                        <v-layout
+                            column
+                            align-center
+                            v-bind:class="{ 'align-center': isMobile }">
+                            <span class="caption font-weight-medium">Network Height</span>
+                            <span class="title info--text">{{ explorerHeight || '-' }}</span>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs6 md3>
+                        <v-layout
+                            column
+                            align-center
+                            v-bind:class="{ 'align-center': isMobile }">
+                            <span class="caption font-weight-medium">Network Hashrate</span>
+                            <span class="title info--text">{{ netHashDisplay || '-' }}</span>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs6 md3>
+                        <v-layout
+                            column
+                            align-center
+                            v-bind:class="{ 'align-center': isMobile }">
+                            <span class="caption font-weight-medium">My Hashrate</span>
+                            <span class="title info--text">{{ hashrateDisplay || '-' }}</span>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs6 md3 v-if="!isMobile">
+                        <v-layout
+                            column
+                            align-center
+                            v-bind:class="{ 'align-center': isMobile }">
+                            <span class="caption font-weight-medium">Est. Blocks/Day</span>
+                            <span class="title info--text">{{ blocksPerDay || '-' }}</span>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
+            </v-layout>
+        </v-footer>
     </v-app>
 </template>
 
 <script>
-import { mapActions, mapState } from 'vuex';
+import { CoinConfig, MinerConfig } from '@/config';
+import { mapActions, mapGetters, mapState } from 'vuex';
 import store from '@/store';
 const NavTop = () => import('@/components/NavTop');
 
@@ -29,7 +84,44 @@ export default {
         return {};
     },
     computed: {
-        ...mapState({}),
+        ...mapGetters({
+            daemons: 'miner/daemonList',
+            hashrateDisplay: 'miner/hashrateDisplay',
+            totalHashrate: 'miner/totalHashrate',
+            netHashDisplay: 'explorer/netHashDisplay',
+            netHash: 'explorer/netHash'
+        }),
+        ...mapState({
+            explorerInfo: state => state.explorer.explorerInfo,
+            daemonStatus: state => state.miner.daemonStatus
+        }),
+        explorerHeight () {
+
+            return this.explorerInfo ? this.explorerInfo.height : undefined;
+        },
+        estSolveTime () {
+
+            if (!this.totalHashrate || !this.netHash) {
+
+                return;
+            }
+            let hashPercent = (this.totalHashrate / this.netHash);
+            return hashPercent;
+        },
+        blocksPerDay () {
+
+            let hashPercent = (this.totalHashrate / this.netHash);
+            return (hashPercent * 1440).toFixed(0);
+        },
+        hashPercent () {
+
+            if (!this.totalHashrate || !this.netHash) {
+
+                return;
+            }
+            let hashPercent = (this.totalHashrate / this.netHash) * 100;
+            return hashPercent.toFixed(2);
+        },
         isMobile () {
 
             return this.$vuetify.breakpoint.smAndDown;
