@@ -1,5 +1,8 @@
 <template>
-    <v-layout column>
+    <v-layout
+        column
+        class="pb-5"
+        v-bind:class="{ 'mb-3': daemons.length > 0 }">
         <v-layout column v-if="daemons.length > 0">
             <v-layout
                 row
@@ -8,8 +11,6 @@
                 class="px-3 py-3 no-select title secondary--text">
                 <span>{{ `Miners (${daemons.length})`}}</span>
                 <v-spacer/>
-                <!--<span class="title info--text">{{ `${totalHashrate} h/s` }}</span>
-                <v-spacer/>-->
                 <v-btn
                     dark
                     outline
