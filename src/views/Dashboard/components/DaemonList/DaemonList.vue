@@ -269,13 +269,9 @@ export default {
         },
         minerDialogValid () {
 
-            let minerCompare == this.addEditMinerDialog.editMode ? { ..this.minerToEdit } : { ..this.newMiner };
+            let minerCompare = this.addEditMinerDialog.editMode ? this.minerToEdit : this.newMiner;
 
-            //if (this.minerToEdit.ipAddress == '' || this.minerToEdit.ipAddress.split('.').length < 4) {
-
-                //return false;
-            //}
-            if (this.minerToEdit.walletAddress == '') {
+            if (minerCompare.walletAddress == '') {
 
                 return false;
             }
