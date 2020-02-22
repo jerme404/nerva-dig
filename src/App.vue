@@ -27,40 +27,44 @@
                     class="px-3 no-select secondary--text primary lighten-1"
                     v-bind:class="{ 'py-3': !isMobile, 'py-2': isMobile }"
                     v-if="daemons.length > 0">
-                    <v-flex xs6 md3 v-if="!isMobile">
-                        <v-layout
-                            column
-                            align-center
-                            v-bind:class="{ 'align-center': isMobile }">
-                            <span class="caption font-weight-medium">Network Height</span>
-                            <span class="title info--text">{{ explorerHeight || '-' }}</span>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs6 md3>
-                        <v-layout
-                            column
-                            align-center
-                            v-bind:class="{ 'align-center': isMobile }">
-                            <span class="caption font-weight-medium">Network Hashrate</span>
-                            <span class="title info--text">{{ netHashDisplay || '-' }}</span>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs6 md3>
-                        <v-layout
-                            column
-                            align-center
-                            v-bind:class="{ 'align-center': isMobile }">
-                            <span class="caption font-weight-medium">My Hashrate</span>
-                            <span class="title info--text">{{ hashrateDisplay || '-' }}</span>
-                        </v-layout>
-                    </v-flex>
-                    <v-flex xs6 md3 v-if="!isMobile">
-                        <v-layout
-                            column
-                            align-center
-                            v-bind:class="{ 'align-center': isMobile }">
-                            <span class="caption font-weight-medium">Est. Blocks/Day</span>
-                            <span class="title info--text">{{ blocksPerDay || '-' }}</span>
+                    <v-flex xs12 xl10 offset-xl1>
+                        <v-layout row>
+                            <v-flex xs6 md3 v-if="!isMobile">
+                                <v-layout
+                                    column
+                                    align-center
+                                    v-bind:class="{ 'align-center': isMobile }">
+                                    <span class="caption font-weight-medium">Network Height</span>
+                                    <span class="title info--text">{{ explorerHeight || '-' }}</span>
+                                </v-layout>
+                            </v-flex>
+                            <v-flex xs6 md3>
+                                <v-layout
+                                    column
+                                    align-center
+                                    v-bind:class="{ 'align-center': isMobile }">
+                                    <span class="caption font-weight-medium">Network Hashrate</span>
+                                    <span class="title info--text">{{ netHashDisplay || '-' }}</span>
+                                </v-layout>
+                            </v-flex>
+                            <v-flex xs6 md3>
+                                <v-layout
+                                    column
+                                    align-center
+                                    v-bind:class="{ 'align-center': isMobile }">
+                                    <span class="caption font-weight-medium">My Hashrate</span>
+                                    <span class="title info--text">{{ hashrateDisplay || '-' }}</span>
+                                </v-layout>
+                            </v-flex>
+                            <v-flex xs6 md3 v-if="!isMobile">
+                                <v-layout
+                                    column
+                                    align-center
+                                    v-bind:class="{ 'align-center': isMobile }">
+                                    <span class="caption font-weight-medium">Est. Blocks/Day</span>
+                                    <span class="title info--text">{{ blocksPerDay || '-' }}</span>
+                                </v-layout>
+                            </v-flex>
                         </v-layout>
                     </v-flex>
                 </v-layout>

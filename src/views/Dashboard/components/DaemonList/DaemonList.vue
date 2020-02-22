@@ -1,205 +1,208 @@
 <template>
-    <v-layout
-        column
-        class="pb-5"
-        v-bind:class="{ 'mb-3': daemons.length > 0 }">
-        <v-layout column v-if="daemons.length > 0">
+    <v-layout row>
+        <v-flex xs12 xl10 offset-xl1>
             <v-layout
-                row
-                shrink
-                align-center
-                class="px-3 py-3 no-select title secondary--text">
-                <span>{{ `Miners (${daemons.length})`}}</span>
-                <v-spacer/>
-                <v-btn
-                    dark
-                    outline
-                    color="info"
-                    class="ma-0"
-                    @click="addMiner">
-                    <v-icon size="16" color="info" class="mr-2">
-                        fas fa-plus
-                    </v-icon>
-                    Add Miner
-                </v-btn>
-            </v-layout>
-            <v-layout row shrink wrap>
-                <v-flex
-                    xs12
-                    sm6
-                    md4
-                    lg4
-                    d-flex
-                    v-bind:class="{ 'pa-2': !isMobile }"
-                    v-for="(daemon, index) in daemons"
-                    :key="index">
-                    <daemon
-                        :daemon="daemon"
-                        :status="daemonStatus[daemon.id]"
-                        :explorerHeight="explorerHeight"
-                        @editDaemon="editMiner"/>
-                </v-flex>
-            </v-layout>
-
-        </v-layout>
-
-        <v-layout
-            column
-            align-center
-            justify-center
-            class="py-3 no-select"
-            v-else-if="daemons.length == 0">
-            <span class="title secondary--text pb-3">
-                No miners
-            </span>
-            <span class="subheading secondary--text font-weight-light">
-                You haven't added any miners yet.
-            </span>
-            <span class="subheading secondary--text font-weight-light pb-3">
-                Add one to start mining.
-            </span>
-            <v-btn
-                dark
-                outline
-                class="secondary--text"
-                @click="addMiner">
-                Add Miner
-            </v-btn>
-        </v-layout>
-
-        <v-dialog persistent v-model="addEditMinerDialog.show" max-width="500" lazy>
-            <v-card dark class="primary" v-if="addEditMinerDialog.show">
-                <v-card-title>
-                    <span class="title">
-                        {{`${addEditMinerDialog.editMode ? 'Edit' : 'Add'} Miner`}}
-                    </span>
-                </v-card-title>
-                <v-card-text>
-                    <v-layout row wrap align-center>
-                        <v-flex xs8 class="pr-2 pb-4">
-                            <v-text-field
-                                v-model="minerToEdit.name"
-                                dark
-                                hide-details
-                                color="#FAFAFA"
-                                label="Miner Name"
-                                v-if="addEditMinerDialog.editMode">
-                            </v-text-field>
-                            <v-text-field
-                                v-model="newMiner.name"
-                                dark
-                                hide-details
-                                color="#FAFAFA"
-                                label="Miner Name"
-                                v-else>
-                            </v-text-field>
-                        </v-flex>
-                        <v-flex xs4 class="pb-4">
-                            <v-text-field
-                                v-model="minerToEdit.miningThreads"
-                                dark
-                                hide-details
-                                type="number"
-                                min="1"
-                                color="#FAFAFA"
-                                label="Mining Threads"
-                                v-if="addEditMinerDialog.editMode">
-                            </v-text-field>
-                            <v-text-field
-                                v-model="newMiner.miningThreads"
-                                dark
-                                hide-details
-                                type="number"
-                                min="1"
-                                color="#FAFAFA"
-                                label="Mining Threads"
-                                v-else>
-                            </v-text-field>
-                        </v-flex>
-                        <v-flex xs8 class="pr-2 pb-3">
-                            <v-text-field
-                                v-model="minerToEdit.ipAddress"
-                                dark
-                                hide-details
-                                prefix="http://"
-                                color="#FAFAFA"
-                                label="Daemon Address"
-                                v-if="addEditMinerDialog.editMode">
-                            </v-text-field>
-                            <v-text-field
-                                v-model="newMiner.ipAddress"
-                                dark
-                                hide-details
-                                prefix="http://"
-                                color="#FAFAFA"
-                                label="Daemon Address"
-                                v-else>
-                            </v-text-field>
-                        </v-flex>
-                        <v-flex xs4 class='pb-3'>
-                            <v-text-field
-                                v-model="minerToEdit.port"
-                                dark
-                                hide-details
-                                type="number"
-                                prefix=":"
-                                color="#FAFAFA"
-                                label="Port"
-                                v-if="addEditMinerDialog.editMode">
-                            </v-text-field>
-                            <v-text-field
-                                v-model="newMiner.port"
-                                dark
-                                hide-details
-                                type="number"
-                                prefix=":"
-                                color="#FAFAFA"
-                                label="Port"
-                                v-else>
-                            </v-text-field>
-                        </v-flex>
-                        <v-flex xs12 class="pb-4">
-                            <v-text-field
-                                v-model="minerToEdit.walletAddress"
-                                dark
-                                clearable
-                                hide-details
-                                color="#FAFAFA"
-                                label="Wallet Address"
-                                v-if="addEditMinerDialog.editMode">
-                            </v-text-field>
-                            <v-text-field
-                                v-model="newMiner.walletAddress"
-                                dark
-                                clearable
-                                hide-details
-                                color="#FAFAFA"
-                                label="Wallet Address"
-                                v-else>
-                            </v-text-field>
-                        </v-flex>
-                    </v-layout>
-                </v-card-text>
-                <v-card-actions>
-                    <v-layout row align-center>
+                column
+                class="pb-5"
+                v-bind:class="{ 'mb-3': daemons.length > 0 }">
+                <v-layout column v-if="daemons.length > 0">
+                    <v-layout
+                        row
+                        shrink
+                        align-center
+                        class="px-3 py-3 no-select title secondary--text">
+                        <span>{{ `Miners (${daemons.length})`}}</span>
                         <v-spacer/>
                         <v-btn
-                            flat
-                            color="error"
-                            @click="minerDialogCancel">
-                            Cancel
-                        </v-btn>
-                        <v-btn
-                            flat
-                            color="success darken-1"
-                            :disabled="!minerDialogValid"
-                            @click="minerDialogConfirm">
-                            {{ `${addEditMinerDialog.editMode ? 'Update' : 'Add'}` }}
+                            dark
+                            outline
+                            color="info"
+                            class="ma-0"
+                            @click="addMiner">
+                            <v-icon size="16" color="info" class="mr-2">
+                                fas fa-plus
+                            </v-icon>
+                            Add Miner
                         </v-btn>
                     </v-layout>
-                </v-card-actions>
-            </v-card>
-        </v-dialog>
+                    <v-layout row shrink wrap>
+                        <v-flex
+                            xs12
+                            sm6
+                            md4
+                            lg4
+                            d-flex
+                            v-bind:class="{ 'pa-2': !isMobile }"
+                            v-for="(daemon, index) in daemons"
+                            :key="index">
+                            <daemon
+                                :daemon="daemon"
+                                :status="daemonStatus[daemon.id]"
+                                :explorerHeight="explorerHeight"
+                                @editDaemon="editMiner"/>
+                        </v-flex>
+                    </v-layout>
+
+                </v-layout>
+
+                <v-layout
+                    column
+                    align-center
+                    justify-center
+                    class="py-3 no-select"
+                    v-else-if="daemons.length == 0">
+                    <span class="title secondary--text pb-3">
+                        No miners
+                    </span>
+                    <span class="subheading secondary--text font-weight-light">
+                        You haven't added any miners yet.
+                    </span>
+                    <span class="subheading secondary--text font-weight-light pb-3">
+                        Add one to start mining.
+                    </span>
+                    <v-btn
+                        dark
+                        outline
+                        class="secondary--text"
+                        @click="addMiner">
+                        Add Miner
+                    </v-btn>
+                </v-layout>
+
+                <v-dialog persistent v-model="addEditMinerDialog.show" max-width="500" lazy>
+                    <v-card dark class="primary" v-if="addEditMinerDialog.show">
+                        <v-card-title>
+                            <span class="title">
+                                {{`${addEditMinerDialog.editMode ? 'Edit' : 'Add'} Miner`}}
+                            </span>
+                        </v-card-title>
+                        <v-card-text>
+                            <v-layout row wrap align-center>
+                                <v-flex xs8 class="pr-2 pb-4">
+                                    <v-text-field
+                                        v-model="minerToEdit.name"
+                                        dark
+                                        hide-details
+                                        color="#FAFAFA"
+                                        label="Miner Name"
+                                        v-if="addEditMinerDialog.editMode">
+                                    </v-text-field>
+                                    <v-text-field
+                                        v-model="newMiner.name"
+                                        dark
+                                        hide-details
+                                        color="#FAFAFA"
+                                        label="Miner Name"
+                                        v-else>
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs4 class="pb-4">
+                                    <v-text-field
+                                        v-model="minerToEdit.miningThreads"
+                                        dark
+                                        hide-details
+                                        type="number"
+                                        min="1"
+                                        color="#FAFAFA"
+                                        label="Mining Threads"
+                                        v-if="addEditMinerDialog.editMode">
+                                    </v-text-field>
+                                    <v-text-field
+                                        v-model="newMiner.miningThreads"
+                                        dark
+                                        hide-details
+                                        type="number"
+                                        min="1"
+                                        color="#FAFAFA"
+                                        label="Mining Threads"
+                                        v-else>
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs8 class="pr-2 pb-3">
+                                    <v-text-field
+                                        v-model="minerToEdit.ipAddress"
+                                        dark
+                                        hide-details
+                                        prefix="http://"
+                                        color="#FAFAFA"
+                                        label="Daemon Address"
+                                        v-if="addEditMinerDialog.editMode">
+                                    </v-text-field>
+                                    <v-text-field
+                                        v-model="newMiner.ipAddress"
+                                        dark
+                                        hide-details
+                                        color="#FAFAFA"
+                                        label="Daemon Address"
+                                        v-else>
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs4 class='pb-3'>
+                                    <v-text-field
+                                        v-model="minerToEdit.port"
+                                        dark
+                                        hide-details
+                                        type="number"
+                                        prefix=":"
+                                        color="#FAFAFA"
+                                        label="Port"
+                                        v-if="addEditMinerDialog.editMode">
+                                    </v-text-field>
+                                    <v-text-field
+                                        v-model="newMiner.port"
+                                        dark
+                                        hide-details
+                                        type="number"
+                                        prefix=":"
+                                        color="#FAFAFA"
+                                        label="Port"
+                                        v-else>
+                                    </v-text-field>
+                                </v-flex>
+                                <v-flex xs12 class="pb-4">
+                                    <v-text-field
+                                        v-model="minerToEdit.walletAddress"
+                                        dark
+                                        clearable
+                                        hide-details
+                                        color="#FAFAFA"
+                                        label="Wallet Address"
+                                        v-if="addEditMinerDialog.editMode">
+                                    </v-text-field>
+                                    <v-text-field
+                                        v-model="newMiner.walletAddress"
+                                        dark
+                                        clearable
+                                        hide-details
+                                        color="#FAFAFA"
+                                        label="Wallet Address"
+                                        v-else>
+                                    </v-text-field>
+                                </v-flex>
+                            </v-layout>
+                        </v-card-text>
+                        <v-card-actions>
+                            <v-layout row align-center>
+                                <v-spacer/>
+                                <v-btn
+                                    flat
+                                    color="error"
+                                    @click="minerDialogCancel">
+                                    Cancel
+                                </v-btn>
+                                <v-btn
+                                    flat
+                                    color="success darken-1"
+                                    :disabled="!minerDialogValid"
+                                    @click="minerDialogConfirm">
+                                    {{ `${addEditMinerDialog.editMode ? 'Update' : 'Add'}` }}
+                                </v-btn>
+                            </v-layout>
+                        </v-card-actions>
+                    </v-card>
+                </v-dialog>
+            </v-layout>
+        </v-flex>
     </v-layout>
 </template>
 
@@ -225,7 +228,7 @@ export default {
             },
             newMiner: {
                 name: '',
-                ipAddress: '',
+                ipAddress: 'http://',
                 port: '',
                 walletAddress: '',
                 miningThreads: 1
@@ -301,7 +304,7 @@ export default {
 
             this.newMiner = {
                 name: '',
-                ipAddress: '',
+                ipAddress: 'http://',
                 port: MinerConfig.defaultRpcPort,
                 walletAddress: this.newMiner.walletAddress,
                 miningThreads: this.newMiner.miningThreads
@@ -313,7 +316,7 @@ export default {
         },
         editMiner (minerToEdit) {
 
-            this.minerToEdit = minerToEdit;
+            this.minerToEdit = { ...minerToEdit };
             this.addEditMinerDialog = {
                 show: true,
                 editMode: true

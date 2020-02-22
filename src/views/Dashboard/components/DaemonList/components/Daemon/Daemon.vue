@@ -14,9 +14,10 @@
                 </span>
                 <v-spacer/>
                 <span v-if="!isMining" class="title" v-bind:class="{
-                    'error--text': !isOnline
+                    'error--text': !isOnline,
+                    'info--text': isOnline
                 }">
-                    {{ isOnline ? 'Online, not mining' : 'Offline' }}
+                    {{ isOnline ? 'Online' : 'Offline' }}
                 </span>
                 <span v-else class="title success--text">
                     {{ hashrate }}
@@ -41,6 +42,11 @@
                             <span class="font-weight-medium">{{ version || '-' }}</span>
                         </v-layout>
                         <v-layout row align-center>
+                            <span>Height</span>
+                            <v-spacer/>
+                            <span class="font-weight-medium">{{ height || '-' }}</span>
+                        </v-layout>
+                        <v-layout row align-center>
                             <span>Connections</span>
                             <v-spacer/>
                             <span class="font-weight-medium">{{ connections || '-' }}</span>
@@ -50,14 +56,23 @@
             </v-layout>
             <v-divider dark/>
             <v-layout row align-center class="pr-2">
-                <v-btn
+                <!--<v-btn
                     small
                     flat
                     :color="isMining ? 'error' : 'info'"
                     @click="changeMiningAction"
                     v-if="isOnline">
                     {{ `${isMining ? 'Stop' : 'Start'} Mining` }}
-                </v-btn>
+                </v-btn>-->
+                <v-switch
+                    dark
+                    hide-details
+                    color="accent"
+                    class="ml-3 mt-0 py-0"
+                    v-model="miningSwitch"
+                    :label="isMining ? 'Mining' : 'Not Mining'"
+                    v-if="isOnline">
+                </v-switch>
                 <v-spacer/>
                 <v-btn
                     icon
@@ -154,6 +169,25 @@ export default {
 
             return this.isOnline && !!this.status.miningStatus && this.status.miningStatus.active;
         },
+        miningSwitch: {
+            get () {
+
+                return this.isOnline && !!this.status.miningStatus && this.status.miningStatus.active;
+            },
+            set (value) {
+
+                this.changeMiningAction();
+            }
+        },
+        height () {
+
+            if (!this.status || !this.status.info) {
+
+                return;
+            }
+
+            return this.status.info.height;
+        },
         version () {
 
             if (!this.status || !this.status.info) {
@@ -185,6 +219,18 @@ export default {
                 return;
             }
             return `${this.status.info.incoming_connections_count} in, ${this.status.info.outgoing_connections_count} out`;
+        },
+        miningThreads () {
+
+            if (!this.status || !this.status.info) {
+
+                return this.daemon.miningThreads;
+            }
+            if (!this.isOnline || !this.status.miningStatus || !this.status.miningStatus.active) {
+
+                return this.daemon.miningThreads;
+            }
+            return this.status.miningStatus.threads_count;
         }
     },
     methods: {
@@ -216,21 +262,40 @@ export default {
 
             return this.startMining(this.daemon).then(() => {
 
-                this.$notify.success('Mining started');
+                this.$notify.success(`${this.daemon.name}: Mining started`);
             }).catch((err) => {
 
-                this.$notify.error('Start mining error');
+                this.$notify.error(`${this.daemon.name}: Error starting miner`);
             });
         },
         stopMiningClick () {
 
             return this.stopMining(this.daemon).then(() => {
 
-                this.$notify.success('Mining stopped');
+                this.$notify.success(`${this.daemon.name}: Mining stopped`);
             }).catch((err) => {
 
-                this.$notify.error('Stop mining error');
+                this.$notify.error(`${this.daemon.name}: Error stopping miner`);
             });
+        },
+        restartMining () {
+
+            return this.stopMiningClick().then(() => {
+
+                return this.startMiningClick();
+            });
+        }
+    },
+    watch: {
+        daemon: {
+            deep: true,
+            handler () {
+
+                if (this.daemon.miningThreads != this.miningThreads) {
+
+                    this.restartMining();
+                }
+            }
         }
     }
 };
