@@ -269,26 +269,15 @@ export default {
         },
         minerDialogValid () {
 
-            if (this.addEditMinerDialog.editMode) {
+            let minerCompare == this.addEditMinerDialog.editMode ? { ..this.minerToEdit } : { ..this.newMiner };
 
-                if (this.minerToEdit.ipAddress == '' || this.minerToEdit.ipAddress.split('.').length < 4) {
+            //if (this.minerToEdit.ipAddress == '' || this.minerToEdit.ipAddress.split('.').length < 4) {
 
-                    return false;
-                }
-                if (this.minerToEdit.walletAddress == '') {
+                //return false;
+            //}
+            if (this.minerToEdit.walletAddress == '') {
 
-                    return false;
-                }
-            } else {
-
-                if (this.newMiner.ipAddress == '' || this.newMiner.ipAddress.split('.').length < 4) {
-
-                    return false;
-                }
-                if (this.newMiner.walletAddress == '') {
-
-                    return false;
-                }
+                return false;
             }
             return true;
         }
