@@ -1,6 +1,8 @@
 # nerva-dig
 Web page for Nerva daemon miner control
 
+![miner screenshot](docs/img/nerva-dig-screenshot.png)
+
 #### Build with URL path
 
 Set `VUE_PUBLIC_PATH=/<path>/` in `./env.withpath`
